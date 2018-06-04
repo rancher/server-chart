@@ -32,9 +32,9 @@ spec:
 {{- if .Values.debug }}
         - "--debug"
 {{- end }}
-{{- if .Values.cacertFile }}
+{{- if .Values.privateCA }}
         # Private CA - don't clear ca certs
-{{- if else eq .Values.tls "rancher" }}
+{{- else if eq .Values.tls "rancher" }}
         # Rancher self-signed - don't clear ca certs
 {{- else }}
         # Public trusted CA - clear ca certs
@@ -54,7 +54,7 @@ spec:
           periodSeconds: 30
         resources:
 {{ toYaml .Values.resources | indent 10 }}
-{{- if .Values.cacertFile }}
+{{- if .Values.privateCA }}
         # Pass CA cert into rancher for private CA
         volumeMounts:
         - mountPath: /etc/rancher/ssl

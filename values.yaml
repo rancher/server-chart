@@ -1,8 +1,3 @@
-# Path to private CA certificate.
-# If you are using a Private CA, Rancher needs the CA certificate to set
-# up "trusted" SSL from the agents back to the server.
-# cacertFile: /path/to/cacerts.pem
-
 # Add debug flag to Rancher server
 debug: false
 
@@ -18,11 +13,8 @@ imagePullSecrets: []
 # See tls section for details.
 ingress:
   tls:
-    # letsEncrypt, files
-    source: files
-    # certFile: /path/to/tls.crt
-    # keyFile: /path/to/tls.key
-
+    # letsEncrypt, secrets
+    source: secret
 
 ### LetsEncrypt config ###
 # ProTip: The prod environment only allows you to register a name 5 times a week.
@@ -30,6 +22,10 @@ ingress:
 letsEncrypt:
   email: none@example.com
   environment: staging
+
+# If you are using certs signed by a private CA set to 'true' and set the 'tls-rancher-server'
+# in the 'rancher-system' namespace. See the README.md for details
+privateCA: false
 
 # Override rancher image location for Air Gap installs
 rancherImage: rancher/rancher
@@ -63,16 +59,16 @@ resources: {}
 #     letsEncrypt.email: your.name@example.com
 #     letsEncrypt.environment: staging
 #
-#   - Use certs from files
-#     NOTE: If you are using private CA signed certs see 'cacertFile:'
+#   - Use certs from secret.
+#     Add the tls.key and tls.crt values to the 'tls-rancher' secret in the 'rancher-system' namespace.
+#     See the README.md for more details.
+#     NOTE: If you are using private CA signed certs see 'privateCA:'
 #     tls: ingress
-#     ingress.tls.source: files
-#     ingress.tls.certFile: /path/to/tls.crt
-#     ingress.tls.keyFile: /path/to/tls.key
+#     ingress.tls.source: secret
 #
 # - external
 #   Offload SSL at an external source like an external load balancer.
-#   NOTE: If you are using private CA signed certs see 'cacertFile:'
+#   NOTE: If you are using private CA signed certs see 'privateCA:'
 #
 #   tls: external
 #

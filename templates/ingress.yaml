@@ -16,9 +16,8 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"  # Force redirect to ssl.
 {{- end }}
 {{- if eq .Values.tls "external" }}
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false" # turn off ssl redirect for external.
 {{- end }}
-
 spec:
   rules:
   - host: {{ .Values.hostname }}  # hostname to access rancher server

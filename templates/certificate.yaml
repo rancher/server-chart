@@ -11,7 +11,7 @@ metadata:
 spec:
   secretName: tls-rancher
   issuerRef:
-    name: rancher-letsencrypt-{{ .Values.letsEncrypt.environment }}
+    name: {{ template "rancher.fullname" . }}
   commonName: {{ .Values.hostname }}
   dnsNames:
   - {{ .Values.hostname }}
