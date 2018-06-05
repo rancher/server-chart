@@ -3,13 +3,13 @@ pipeline:
   build:
     image: alpine
     commands:
-      - apk --no-cache add curl bash ca-certificates
+      - apk --no-cache add curl bash ca-certificates openssl
       # Install latest helm
       - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
       # Pull latest index to merge with new index
       - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/index.yaml
       # Helm - Lint, Package, Index
-      - mkdir ./charts
+      - helm init -c
       - helm lint ./rancher
       - helm package -d ./charts ./rancher
       - helm repo index --merge /tmp/index.yaml ./charts
