@@ -3,7 +3,7 @@ pipeline:
   build:
     image: alpine
     commands:
-      - apk --no-cache add curl bash ca-certificate
+      - apk --no-cache add curl bash ca-certificates
       # Install latest helm
       - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
       # Pull latest index to merge with new index
