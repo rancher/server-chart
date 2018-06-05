@@ -11,7 +11,7 @@ Rancher Resources:
 > NOTE: We recommend a small dedicated cluster for running Rancher Server.  Rancher will integrate with the local cluster and use the clusters etcd database as its database.
 
 ## Prerequisites
-
+  
 ### nginx-ingress
 
 This chart requires the `nginx-ingress` Ingress Controller.

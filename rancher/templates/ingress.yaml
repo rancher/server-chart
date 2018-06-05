@@ -18,6 +18,9 @@ metadata:
 {{- if eq .Values.tls "external" }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false" # turn off ssl redirect for external.
 {{- end }}
+{{- if eq .Values.ingress.tls.source "letsEncrypt" }}
+    certmanager.k8s.io/issuer: {{ template "rancher.fullname" . }}
+{{- end }}
 spec:
   rules:
   - host: {{ .Values.hostname }}  # hostname to access rancher server

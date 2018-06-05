@@ -1,0 +1,25 @@
+---
+pipeline:
+  build:
+    image: alpine
+    commands:
+      - apk --no-cache add curl bash
+      # Install latest helm
+      - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+      # Pull latest index to merge with new index
+      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/index.yaml
+      # Helm - Lint, Package, Index
+      - helm lint ./rancher
+      - helm package -d ./charts ./rancher
+      - helm repo index --merge /tmp/index.yaml ./charts
+
+  publish:
+    image: plugins/gcs
+    source: charts
+    target: releases.rancher.com/server-charts/
+    acl:
+      - allUsers:READER
+    cache_control: public,max-age=3600
+    secrets:
+      - source: google_auth_key
+        target: GOOGLE_CREDENTIALS

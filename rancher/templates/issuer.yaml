@@ -11,10 +11,10 @@ metadata:
 spec:
   acme:
 {{- if eq .Values.letsEncrypt.environment "prod" }}
-    server: https://acme-v01.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
 {{- end }}
 {{- if eq .Values.letsEncrypt.environment "staging" }}
-    server: https://acme-staging.api.letsencrypt.org/directory
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
 {{- end }}
     email: {{ .Values.letsEncrypt.email }}
     privateKeySecretRef:
