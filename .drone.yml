@@ -9,6 +9,7 @@ pipeline:
       # Pull latest index to merge with new index
       - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/index.yaml
       # Helm - Lint, Package, Index
+      - mkdir ./charts
       - helm lint ./rancher
       - helm package -d ./charts ./rancher
       - helm repo index --merge /tmp/index.yaml ./charts
