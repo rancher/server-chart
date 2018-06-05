@@ -23,3 +23,6 @@ pipeline:
     secrets:
       - source: google_auth_key
         target: GOOGLE_CREDENTIALS
+    when:
+      branch: master
+      event: tag
