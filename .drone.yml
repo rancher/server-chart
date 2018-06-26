@@ -11,13 +11,13 @@ pipeline:
       # Helm - Lint, Package, Index
       - helm init -c
       - helm lint ./rancher
-      - helm package -d ./charts ./rancher
-      - helm repo index --merge /tmp/index.yaml ./charts
+      - helm package -d ./charts/stable ./rancher
+      - helm repo index --merge /tmp/index.yaml ./charts/stable
 
   publish:
     image: plugins/gcs
-    source: charts
-    target: releases.rancher.com/server-charts/
+    source: charts/stable
+    target: releases.rancher.com/server-charts/stable
     acl:
       - allUsers:READER
     cache_control: public,max-age=3600
