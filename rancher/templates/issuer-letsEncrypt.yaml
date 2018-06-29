@@ -10,7 +10,7 @@ metadata:
     release: {{ .Release.Name }}
 spec:
   acme:
-{{- if eq .Values.letsEncrypt.environment "prod" }}
+{{- if eq .Values.letsEncrypt.environment "production" }}
     server: https://acme-v02.api.letsencrypt.org/directory
 {{- end }}
 {{- if eq .Values.letsEncrypt.environment "staging" }}

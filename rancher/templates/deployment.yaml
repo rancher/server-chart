@@ -34,7 +34,7 @@ spec:
 {{- end }}
 {{- if .Values.privateCA }}
         # Private CA - don't clear ca certs
-{{- else if eq .Values.tls "rancher" }}
+{{- else if eq .Values.ingress.tls.source "rancher" }}
         # Rancher self-signed - don't clear ca certs
 {{- else }}
         # Public trusted CA - clear ca certs
@@ -58,11 +58,11 @@ spec:
         # Pass CA cert into rancher for private CA
         volumeMounts:
         - mountPath: /etc/rancher/ssl
-          name: tls-rancher-server-volume
+          name: tls-ca-volume
           readOnly: true
       volumes:
-      - name: tls-rancher-server-volume
+      - name: tls-ca-volume
         secret:
           defaultMode: 420
-          secretName: tls-rancher-server
+          secretName: tls-ca
 {{- end }}
