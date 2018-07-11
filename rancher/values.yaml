@@ -27,10 +27,13 @@ letsEncrypt:
 # in the 'rancher-system' namespace. See the README.md for details
 privateCA: false
 
+# http[s] proxy server passed into rancher server.
+# proxy:
+
 # Override rancher image location for Air Gap installs
 rancherImage: rancher/rancher
 # rancher/rancher image tag. https://hub.docker.com/r/rancher/rancher/tags/
-rancherImageTag: v2.0.4
+rancherImageTag: v2.0.5
 
 # Number of Rancher server replicas.
 replicas: 1

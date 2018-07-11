@@ -37,7 +37,7 @@ Rancher server is designed to be "secure by default" and requires SSL/TLS config
 * `ingress` - Provide a certificate, use LetsEncrypt or use Rancher's generated CA for TLS on Kubernetes Ingress.
 * `external` - Configure certificates on a external load balancer or other proxy.
 
-### SSL: `tls=ingress` - (Default) TLS Configured at the Ingress
+### (Default) TLS Configured at the Ingress
 
 There are three options for the source of the certificate.
 
@@ -45,7 +45,7 @@ There are three options for the source of the certificate.
 * `letsEncrypt` - Use [LetsEncrypt](https://letsencrypt.org/) to issue a cert.
 * `secret` - Configure a Kubernetes Secret with your certificate files.
 
-#### (Default) `ingress.tls.source=rancher` - Rancher Generated Certificates
+#### (Default) Rancher Generated Certificates
 
 The default is to use the Rancher to generate a CA and `cert-manager` to issue the certificate for access to the Rancher server interface.
 
@@ -56,7 +56,7 @@ helm install rancher-stable/rancher --name rancher --namespace cattle-system \
 --set hostname=rancher.my.org
 ```
 
-#### `ingress.tls.source=letsEncrypt` - LetsEncrypt
+#### LetsEncrypt
 
 Use LetsEncrypt's free service to issue trusted SSL certs. This configuration uses http validation so the Ingress must have a Public DNS record and be accessible from the internet.
 
@@ -71,7 +71,7 @@ helm install rancher-stable/rancher --name rancher --namespace cattle-system \
 
 > LetsEncrypt ProTip: The default `production` environment only allows you to register a name 5 times in a week. If you're rebuilding a bunch of times, use `--set letsEncrypt.environment=staging` until you have you're confident your config is right.
 
-#### `ingress.tls.source=secret` - Ingress Certs from Files (Kubernetes Secret)
+#### Ingress Certs from Files (Kubernetes Secret)
 
 Create Kubernetes Secrets from your own cert for Rancher to use.
 
@@ -89,7 +89,7 @@ helm install rancher-stable/rancher --name rancher --namespace cattle-system \
 
 Now that Rancher is running, see [Adding TLS Secrets](#Adding-TLS-Secrets) to publish the certificate files so Rancher and the Ingress Controller can use them.
 
-### SSL: `tls=external` - External SSL Termination
+### External SSL Termination
 
 If you're going to handle the SSL termination on a load balancer or proxy before the Ingress, set `tls=external`
 
@@ -141,17 +141,10 @@ kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 | --- | --- | --- |
 | `debug` | false | `bool` - set debug flag on rancher server |
 | `imagePullSecrets` | [] | `list` - list of names of Secret resource containing private registry credentials |
+| `proxy` | "" | `string` - HTTP[S] proxy server for Rancher |
 | `resources` | {} | `map` - rancher pod resource requests & limits |
 | `rancherImage` | "rancher/rancher" | `string` - rancher image source |
 | `rancherImageTag` | same as chart version | `string` - rancher/rancher image tag |
-
-## HA
-
-The default install runs Rancher with 1 replica.  Scale up after launching or use the `--set replicas=3` option.
-
-## Hostname
-
-The default install sets `rancher.localhost` as the fully qualified domain name to access Rancher. Use the `hostname=` option to set it for your environment.
 
 ## Private or Air Gap Registry
 
@@ -168,6 +161,14 @@ Add the `rancherImage` to point to your private registry image and `imagePullSec
 ```shell
 --set rancherImage=private.reg.org:5000/rancher/rancher \
 --set imagePullSecrets[0].name=secretName
+```
+
+### HTTP[S] Proxy
+
+Rancher requires internet access for some functionality (helm charts). Set `proxy` to your proxy server.
+
+```shell
+--set proxy="http://<username>:<password>@<proxy_url>:<proxy_port>/"
 ```
 
 ## Connecting to Rancher
