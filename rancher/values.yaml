@@ -33,7 +33,7 @@ privateCA: false
 # Override rancher image location for Air Gap installs
 rancherImage: rancher/rancher
 # rancher/rancher image tag. https://hub.docker.com/r/rancher/rancher/tags/
-rancherImageTag: v2.0.5
+rancherImageTag: v2.0.6
 
 # Number of Rancher server replicas.
 replicas: 1
