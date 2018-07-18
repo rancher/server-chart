@@ -30,6 +30,10 @@ privateCA: false
 # http[s] proxy server passed into rancher server.
 # proxy:
 
+# comma separated list of domains or ip addresses that will not use the proxy 
+noProxy: localhost,127.0.0.1
+
+
 # Override rancher image location for Air Gap installs
 rancherImage: rancher/rancher
 # rancher/rancher image tag. https://hub.docker.com/r/rancher/rancher/tags/

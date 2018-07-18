@@ -7,7 +7,7 @@ pipeline:
       # Install latest helm
       - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
       # Pull latest index to merge with new index
-      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/index.yaml
+      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/stable/index.yaml
       # Helm - Lint, Package, Index
       - helm init -c
       - helm lint ./rancher
