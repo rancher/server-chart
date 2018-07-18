@@ -55,7 +55,7 @@ spec:
         - name: NO_PROXY
           value: {{ .Values.noProxy }}
         - name: no_proxy
-          valus: {{ .Values.noProxy }}
+          value: {{ .Values.noProxy }}
 {{- end }}
         livenessProbe:
           tcpSocket:
