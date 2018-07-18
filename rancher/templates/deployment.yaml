@@ -53,9 +53,9 @@ spec:
         - name: https_proxy
           value: {{ .Values.proxy }}
         - name: NO_PROXY
-          value: localhost,127.0.0.1
+          value: {{ .Values.noProxy }}
         - name: no_proxy
-          valus: localhost,127.0.0.1
+          valus: {{ .Values.noProxy }}
 {{- end }}
         livenessProbe:
           tcpSocket:

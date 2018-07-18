@@ -141,6 +141,7 @@ kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 | --- | --- | --- |
 | `debug` | false | `bool` - set debug flag on rancher server |
 | `imagePullSecrets` | [] | `list` - list of names of Secret resource containing private registry credentials |
+| `noProxy` | "127.0.0.1,localhost" | `string` - comma separated list of domains/IPs that will not use the proxy |
 | `proxy` | "" | `string` - HTTP[S] proxy server for Rancher |
 | `resources` | {} | `map` - rancher pod resource requests & limits |
 | `rancherImage` | "rancher/rancher" | `string` - rancher image source |
@@ -165,10 +166,11 @@ Add the `rancherImage` to point to your private registry image and `imagePullSec
 
 ### HTTP[S] Proxy
 
-Rancher requires internet access for some functionality (helm charts). Set `proxy` to your proxy server.
+Rancher requires internet access for some functionality (helm charts). Set `proxy` to your proxy server. Add your domain name or ip exceptions to the `noProxy` list. Make sure your worker cluster `controlplane` nodes are included in this list.
 
 ```shell
 --set proxy="http://<username>:<password>@<proxy_url>:<proxy_port>/"
+--set noProxy="127.0.0.1,localhost,myinternaldomain.example.com"
 ```
 
 ## Connecting to Rancher
