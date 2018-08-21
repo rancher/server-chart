@@ -3,7 +3,7 @@ apiVersion: extensions/v1beta1
 metadata:
   name: {{ template "rancher.fullname" . }}
   labels:
-    app: {{ template "rancher.name" . }}
+    app: {{ template "rancher.fullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
@@ -21,7 +21,7 @@ spec:
 {{ toYaml .Values.imagePullSecrets | indent 6 }}
 {{- end }}
       containers:
-      - image: {{ .Values.rancherImage }}:{{ .Values.rancherImageTag }}
+      - image: {{ .Values.rancherImage }}:{{ default .Chart.AppVersion .Values.rancherImageTag }}
         name: {{ template "rancher.name" . }}
         ports:
         - containerPort: 80
