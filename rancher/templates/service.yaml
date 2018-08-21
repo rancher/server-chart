@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ template "rancher.fullname" . }}
   labels:
-    app: {{ template "rancher.name" . }}
+    app: {{ template "rancher.fullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
@@ -14,4 +14,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: {{ template "rancher.name" . }}
+    app: {{ template "rancher.fullname" . }}
