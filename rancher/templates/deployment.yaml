@@ -20,13 +20,22 @@ spec:
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 6 }}
 {{- end }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ template "rancher.fullname" . }}
+            topologyKey: kubernetes.io/hostname
       containers:
       - image: {{ .Values.rancherImage }}:{{ default .Chart.AppVersion .Values.rancherImageTag }}
         name: {{ template "rancher.name" . }}
         ports:
         - containerPort: 80
-          protocol: TCP
-        - containerPort: 443
           protocol: TCP
         args:
 {{- if .Values.debug }}
@@ -42,8 +51,12 @@ spec:
 {{- end }}
         - "--http-listen-port=80"
         - "--https-listen-port=443"
-{{- if .Values.proxy }}
         env:
+        - name: CATTLE_NAMESPACE
+          value: {{ .Release.Namespace }}
+        - name: CATTLE_PEER_SERVICE
+          value: {{ template "rancher.fullname" . }}
+{{- if .Values.proxy }}
         - name: HTTP_PROXY
           value: {{ .Values.proxy }}
         - name: HTTPS_PROXY
