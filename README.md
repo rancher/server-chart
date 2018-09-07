@@ -127,6 +127,7 @@ kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 
 | Option | Default Value | Description |
 | --- | --- | --- |
+| `auditLog.level` | 0 | `int` - Audit log level - [0-3] |
 | `hostname` | "" | `string` - the Fully Qualified Domain Name for your Rancher Server |
 | `tls` | "ingress" | `string` - Where to terminate ssl/tls - "ingress, external" |
 | `ingress.tls.source` | "rancher" | `string` - Where to get the cert for the ingress. - "rancher, letsEncrypt, secret" |
@@ -146,6 +147,16 @@ kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 | `resources` | {} | `map` - rancher pod resource requests & limits |
 | `rancherImage` | "rancher/rancher" | `string` - rancher image source |
 | `rancherImageTag` | same as chart version | `string` - rancher/rancher image tag |
+
+## Audit Logs
+
+Enable Rancher [Audit Logging](https://rancher.com/docs/rancher/v2.x/en/installation/api-auditing/).
+
+```shell
+--set auditLog.level=1
+```
+
+Enabling Audit Logging will create a sidecar container in the Rancher pod. This container (`rancher-audit-log`) will stream the log to `stdout`.  You can collect this log as you would any container log. Enable the [Logging service under Rancher Tools](https://rancher.com/docs/rancher/v2.x/en/tools/logging/) for the Rancher server cluster or System Project.
 
 ## Private or Air Gap Registry
 
