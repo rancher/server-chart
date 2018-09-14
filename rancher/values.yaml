@@ -1,3 +1,8 @@
+# Additional Trusted CAs.
+# Enable this flag and add your CA certs as a secret named tls-ca-additional in the namespace.
+# See README.md for details.
+additionalTrustedCAs: false
+
 # Add debug flag to Rancher server
 debug: false
 
@@ -10,7 +15,7 @@ imagePullSecrets: []
 # - name: secretName
 
 ### ingress ###
-# See tls section for details.
+# Readme for details and instruction on adding tls secrets.
 ingress:
   tls:
     # rancher, letsEncrypt, secrets
@@ -28,11 +33,10 @@ letsEncrypt:
 privateCA: false
 
 # http[s] proxy server passed into rancher server.
-# proxy:
+# proxy: http://<username>@<password>:<url>:<port>
 
 # comma separated list of domains or ip addresses that will not use the proxy 
-noProxy: localhost,127.0.0.1
-
+noProxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16 
 
 # Override rancher image location for Air Gap installs
 rancherImage: rancher/rancher
@@ -45,36 +49,3 @@ replicas: 1
 
 # Set pod resource requests/limits for Rancher.
 resources: {}
-
-### tls ###
-#   Where to offload the TLS/SSL encrytion
-#
-# - ingress (default)
-#   SSL on the ingress.
-#
-#   - (Default) Use Rancher generated "Self-Signed" Certs
-#     Rancher will populate the <namespace>/rancher-tls secrets with the CA key and cert so cert-manager can
-#     issue a cert for you.
-#     tls: ingress
-#     ingress.tls.source: rancher
-#
-#   - Use LetsEncrypt to issue certs
-#     tls: ingress
-#     ingress.tls.source: letsEncrypt
-#     letsEncrypt.email: your.name@example.com
-#     letsEncrypt.environment: prod
-#
-#   - Use certs from secret.
-#     Add the tls.key and tls.crt values to the 'tls-rancher' secret in the 'cattle-system' namespace.
-#     See the README.md for more details.
-#     NOTE: If you are using private CA signed certs see 'privateCA:'
-#     tls: ingress
-#     ingress.tls.source: secret
-#
-# - external
-#   Offload SSL at an external source like an external load balancer.
-#   NOTE: If you are using private CA signed certs see 'privateCA:'
-#
-#   tls: external
-#
-tls: ingress

@@ -26,8 +26,6 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
-        - containerPort: 443
-          protocol: TCP
         args:
 {{- if .Values.debug }}
         - "--debug"
@@ -48,13 +46,7 @@ spec:
           value: {{ .Values.proxy }}
         - name: HTTPS_PROXY
           value: {{ .Values.proxy }}
-        - name: http_proxy
-          value: {{ .Values.proxy }}
-        - name: https_proxy
-          value: {{ .Values.proxy }}
         - name: NO_PROXY
-          value: {{ .Values.noProxy }}
-        - name: no_proxy
           value: {{ .Values.noProxy }}
 {{- end }}
         livenessProbe:
@@ -69,13 +61,27 @@ spec:
           periodSeconds: 30
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+{{- if .Values.additionalTrustedCAs }}
+        - mountPath: /etc/ssl/certs/ca-additional.pem
+          name: tls-ca-additional-volume
+          subPath: ca-additional.pem
+          readOnly: true
+{{- end }}
 {{- if .Values.privateCA }}
         # Pass CA cert into rancher for private CA
-        volumeMounts:
         - mountPath: /etc/rancher/ssl
           name: tls-ca-volume
           readOnly: true
+{{- end }}
       volumes:
+{{- if .Values.additionalTrustedCAs }}
+      - name: tls-ca-additional-volume
+        secret:
+          defaultMode: 420
+          secretName: tls-ca-additional
+{{- end }}
+{{- if .Values.privateCA }}
       - name: tls-ca-volume
         secret:
           defaultMode: 420
