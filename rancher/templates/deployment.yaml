@@ -78,12 +78,12 @@ spec:
 {{- if .Values.additionalTrustedCAs }}
       - name: tls-ca-additional-volume
         secret:
-          defaultMode: 420
+          defaultMode: 440
           secretName: tls-ca-additional
 {{- end }}
 {{- if .Values.privateCA }}
       - name: tls-ca-volume
         secret:
-          defaultMode: 420
+          defaultMode: 750
           secretName: tls-ca
 {{- end }}
