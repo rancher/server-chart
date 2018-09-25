@@ -69,8 +69,6 @@ helm install rancher-stable/rancher --name rancher --namespace cattle-system \
 --set letsEncrypt.email=me@example.org
 ```
 
-> LetsEncrypt ProTip: The default `production` environment only allows you to register a name 5 times in a week. If you're rebuilding a bunch of times, use `--set letsEncrypt.environment=staging` until you have you're confident your config is right.
-
 #### Ingress Certs from Files (Kubernetes Secret)
 
 Create Kubernetes Secrets from your own cert for Rancher to use.
@@ -88,18 +86,6 @@ helm install rancher-stable/rancher --name rancher --namespace cattle-system \
 ```
 
 Now that Rancher is running, see [Adding TLS Secrets](#Adding-TLS-Secrets) to publish the certificate files so Rancher and the Ingress Controller can use them.
-
-### External SSL Termination
-
-If you're going to handle the SSL termination on a load balancer or proxy before the Ingress, set `tls=external`
-
-> NOTE: If you are using a private CA signed cert, you will need to provide the CA cert to Rancher server. Add `--set privateCA=true` option and see [Private CA Signed - Additional Steps](#Private-CA-Signed---Additional-Steps).
-
-```shell
-helm install rancher-stable/rancher --name rancher --namespace cattle-system \
---set hostname=rancher.my.org \
---set tls=external
-```
 
 ## Adding TLS Secrets
 
@@ -129,7 +115,6 @@ kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 | --- | --- | --- |
 | `auditLog.level` | 0 | `int` - Audit log level - [0-3] |
 | `hostname` | "" | `string` - the Fully Qualified Domain Name for your Rancher Server |
-| `tls` | "ingress" | `string` - Where to terminate ssl/tls - "ingress, external" |
 | `ingress.tls.source` | "rancher" | `string` - Where to get the cert for the ingress. - "rancher, letsEncrypt, secret" |
 | `letsEncrypt.email` | "none@example.com" | `string` - Your email address |
 | `letsEncrypt.environment` | "production" | `string` - Valid options: "staging, production" |
@@ -140,6 +125,7 @@ kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 
 | Option | Default Value | Description |
 | --- | --- | --- |
+| `additionalTrustedCAs` | false | `bool` - See [Additional Trusted CAs](#additional-trusted-cas) |
 | `auditLog.destination` | "sidecar" | `string` - Stream to sidecar container console or hostPath volume - "sidecar, hostPath" |
 | `auditLog.hostPath` | "/var/log/rancher/audit" | `string` - log file destination on host |
 | `auditLog.maxAge` | 1 | `int` - maximum number of days to retain old audit log files |
@@ -147,7 +133,7 @@ kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 | `auditLog.maxSize` | 100 | `int` - maximum size in megabytes of the audit log file before it gets rotated |
 | `debug` | false | `bool` - set debug flag on rancher server |
 | `imagePullSecrets` | [] | `list` - list of names of Secret resource containing private registry credentials |
-| `noProxy` | "127.0.0.1,localhost" | `string` - comma separated list of domains/IPs that will not use the proxy |
+| `noProxy` | "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16" | `string` - comma separated list of domains/IPs that will not use the proxy |
 | `proxy` | "" | `string` - HTTP[S] proxy server for Rancher |
 | `resources` | {} | `map` - rancher pod resource requests & limits |
 | `rancherImage` | "rancher/rancher" | `string` - rancher image source |
@@ -188,7 +174,21 @@ Rancher requires internet access for some functionality (helm charts). Set `prox
 
 ```shell
 --set proxy="http://<username>:<password>@<proxy_url>:<proxy_port>/"
---set noProxy="127.0.0.1,localhost,myinternaldomain.example.com"
+--set noProxy="127.0.0.0/8\,10.0.0.0/8\,172.16.0.0/12\,192.168.0.0/16"
+```
+
+## Additional Trusted CAs
+
+If you have private registries, catalogs or a proxy that intercepts certificates, you may need to add additional trusted CAs to Rancher.
+
+```shell
+--set additionalTrustedCAs=true
+```
+
+Once the Rancher deployment is created, copy your CA certs in pem format into a file named `ca-additional.pem` and use `kubectl` to create the `tls-ca-additional` secret in the `cattle-system` namespace.
+
+```shell
+kubectl -n cattle-system create secret generic tls-ca-additional --from-file=ca-additional.pem
 ```
 
 ## Connecting to Rancher
