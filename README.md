@@ -140,6 +140,11 @@ kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 
 | Option | Default Value | Description |
 | --- | --- | --- |
+| `auditLog.destination` | "sidecar" | `string` - Stream to sidecar container console or hostPath volume - "sidecar, hostPath" |
+| `auditLog.hostPath` | "/var/log/rancher/audit" | `string` - log file destination on host |
+| `auditLog.maxAge` | 1 | `int` - maximum number of days to retain old audit log files |
+| `auditLog.maxBackups` | 1 | `int` - maximum number of audit log files to retain |
+| `auditLog.maxSize` | 100 | `int` - maximum size in megabytes of the audit log file before it gets rotated |
 | `debug` | false | `bool` - set debug flag on rancher server |
 | `imagePullSecrets` | [] | `list` - list of names of Secret resource containing private registry credentials |
 | `noProxy` | "127.0.0.1,localhost" | `string` - comma separated list of domains/IPs that will not use the proxy |
@@ -156,7 +161,9 @@ Enable Rancher [Audit Logging](https://rancher.com/docs/rancher/v2.x/en/installa
 --set auditLog.level=1
 ```
 
-Enabling Audit Logging will create a sidecar container in the Rancher pod. This container (`rancher-audit-log`) will stream the log to `stdout`.  You can collect this log as you would any container log. Enable the [Logging service under Rancher Tools](https://rancher.com/docs/rancher/v2.x/en/tools/logging/) for the Rancher server cluster or System Project.
+By default enabling Audit Logging will create a sidecar container in the Rancher pod. This container (`rancher-audit-log`) will stream the log to `stdout`.  You can collect this log as you would any container log. Enable the [Logging service under Rancher Tools](https://rancher.com/docs/rancher/v2.x/en/tools/logging/) for the Rancher server cluster or System Project.
+
+Set the `auditLog.destination` to `hostPath` to forward logs to volume shared with the host system instead of streaming to a sidecar container.
 
 ## Private or Air Gap Registry
 
