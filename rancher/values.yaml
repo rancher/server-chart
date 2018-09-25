@@ -1,3 +1,16 @@
+# Audit Logs https://rancher.com/docs/rancher/v2.x/en/installation/api-auditing/
+# The audit log is piped to the console of the rancher-audit-log container in the rancher pod.
+# https://rancher.com/docs/rancher/v2.x/en/installation/api-auditing/
+# destination stream to sidecar container console or hostPath volume
+# level: Verbosity of logs, 0 to 3. 0 is off 3 is a lot.
+auditLog:
+  destination: sidecar
+  hostPath: /var/log/rancher/audit/
+  level: 0
+  maxAge: 1
+  maxBackup: 1
+  maxSize: 100
+
 # Add debug flag to Rancher server
 debug: false
 
@@ -32,7 +45,6 @@ privateCA: false
 
 # comma separated list of domains or ip addresses that will not use the proxy 
 noProxy: localhost,127.0.0.1
-
 
 # Override rancher image location for Air Gap installs
 rancherImage: rancher/rancher
