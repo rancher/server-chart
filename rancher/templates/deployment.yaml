@@ -59,7 +59,7 @@ spec:
         - name: AUDIT_LEVEL
           value: {{ .Values.auditLog.level | quote }}
         - name: AUDIT_LOG_MAXAGE
-          value: {{ .Values,auditLog.maxAge | quote }}
+          value: {{ .Values.auditLog.maxAge | quote }}
         - name: AUDIT_LOG_MAXBACKUP
           value: {{ .Values.auditLog.maxBackup | quote }}
         - name: AUDIT_LOG_MAXSIZE
