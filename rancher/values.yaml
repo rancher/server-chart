@@ -57,7 +57,7 @@ rancherImage: rancher/rancher
 # rancherImageTag: v2.0.7
 
 # Number of Rancher server replicas.
-replicas: 1
+replicas: 3
 
 # Set pod resource requests/limits for Rancher.
 resources: {}
