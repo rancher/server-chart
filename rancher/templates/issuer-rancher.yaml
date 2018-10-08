@@ -1,4 +1,5 @@
-{{- if eq .Values.ingress.tls.source "rancher" -}}
+{{- if eq .Values.tls "ingress" -}}
+  {{- if eq .Values.ingress.tls.source "rancher" }}
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
 metadata:
@@ -11,4 +12,5 @@ metadata:
 spec:
   ca:
     secretName: tls-rancher
+  {{- end }}
 {{- end -}}

@@ -11,8 +11,15 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "30"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "1800"
-{{- if ne .Values.ingress.tls.source "secret" }}
+{{- if eq .Values.tls "external" }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "false" # turn off ssl redirect for external.
+{{- else }}
+  {{- if eq .Values.ingress.tls.source "rancher" }}
     certmanager.k8s.io/issuer: {{ template "rancher.fullname" . }}
+  {{- end }}
+  {{- if eq .Values.ingress.tls.source "letsEncrypt" }}
+    certmanager.k8s.io/issuer: {{ template "rancher.fullname" . }}
+  {{- end }}
 {{- end }}
 spec:
   rules:
@@ -22,8 +29,9 @@ spec:
       - backend:
           serviceName: {{ template "rancher.fullname" . }}
           servicePort: 80
+{{- if eq .Values.tls "ingress" }}
   tls:
   - hosts:
     - {{ .Values.hostname }}
     secretName: tls-rancher-ingress
-
+{{- end }}

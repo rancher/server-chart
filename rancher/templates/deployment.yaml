@@ -42,6 +42,8 @@ spec:
 {{- end }}
 {{- if .Values.privateCA }}
         # Private CA - don't clear ca certs
+{{- else if eq .Values.tls "external" }}
+        - "--no-cacerts"
 {{- else if eq .Values.ingress.tls.source "rancher" }}
         # Rancher self-signed - don't clear ca certs
 {{- else }}

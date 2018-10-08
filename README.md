@@ -32,12 +32,7 @@ helm install stable/cert-manager --name cert-manager --namespace kube-system
 
 ## Installing Rancher
 
-Rancher server is designed to be "secure by default" and requires SSL/TLS configuration.  There are two options for where to terminate SSL.
-
-* `ingress` - Provide a certificate, use LetsEncrypt or use Rancher's generated CA for TLS on Kubernetes Ingress.
-* `external` - Configure certificates on a external load balancer or other proxy.
-
-### (Default) TLS Configured at the Ingress
+Rancher server is designed to be "secure by default" and requires SSL/TLS configuration.
 
 There are three options for the source of the certificate.
 
@@ -45,7 +40,7 @@ There are three options for the source of the certificate.
 * `letsEncrypt` - Use [LetsEncrypt](https://letsencrypt.org/) to issue a cert.
 * `secret` - Configure a Kubernetes Secret with your certificate files.
 
-#### (Default) Rancher Generated Certificates
+### (Default) Rancher Generated Certificates
 
 The default is to use the Rancher to generate a CA and `cert-manager` to issue the certificate for access to the Rancher server interface.
 
@@ -56,7 +51,7 @@ helm install rancher-stable/rancher --name rancher --namespace cattle-system \
 --set hostname=rancher.my.org
 ```
 
-#### LetsEncrypt
+### LetsEncrypt
 
 Use LetsEncrypt's free service to issue trusted SSL certs. This configuration uses http validation so the Ingress must have a Public DNS record and be accessible from the internet.
 
@@ -69,7 +64,7 @@ helm install rancher-stable/rancher --name rancher --namespace cattle-system \
 --set letsEncrypt.email=me@example.org
 ```
 
-#### Ingress Certs from Files (Kubernetes Secret)
+### Ingress Certs from Files (Kubernetes Secret)
 
 Create Kubernetes Secrets from your own cert for Rancher to use.
 
@@ -138,6 +133,7 @@ kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 | `resources` | {} | `map` - rancher pod resource requests & limits |
 | `rancherImage` | "rancher/rancher" | `string` - rancher image source |
 | `rancherImageTag` | same as chart version | `string` - rancher/rancher image tag |
+| `tls` | "ingress" | `string` - **DEPRECATED**: Changing this option is not recommended. See [External TLS Termination](#external-tls-termination) for details. - "ingress, external" |
 
 ## Audit Logs
 
@@ -190,6 +186,62 @@ Once the Rancher deployment is created, copy your CA certs in pem format into a 
 ```shell
 kubectl -n cattle-system create secret generic tls-ca-additional --from-file=ca-additional.pem
 ```
+
+## External TLS Termination
+
+Due to security concerns and configuration variability, terminating TLS exclusively on an external load balancer is being deprecated. This option will be removed in future versions of the Helm chart.
+
+We recommend configuring your load balancer as a Layer 4 balancer, forwarding plain 80/tcp and 443/tcp to the Rancher Management cluster nodes. The Ingress Controller on the cluster will redirect http traffic on port 80 to https on port 443.
+
+You may configure your load balancer as a Layer 7 balancer with a SSL/TLS certificate, but you will need to configure the load balancer to forward to the https endpoints on the Rancher Management Cluster nodes.
+
+### Conversion
+
+#### Certificates
+
+Make sure you have a copy of the following:
+
+* Server Certificate
+* Server Certificate Private Key
+* Any Chain Certificates
+* Private CA Root Certificate (if Private CA)
+
+The certificate doesn't need to be the same one used by the external load balancer, but it can be.  If you creating a new certificate and used a Private CA to sign the certificate installed on the external load balancer, use the same CA to sign the new certificate.
+
+#### Gather Chart Options
+
+See [Ingress Certificates from Files (Kubernetes Secrets)](#ingress-certificates-from-files-kubernetes-secret) section for chart options on setting up TLS with provided certificates.
+
+In general you will need to swap out:
+
+```plain
+--set tls=external
+```
+
+With:
+
+```plain
+--set ingress.tls.source=secret
+```
+
+> **Note:** if your certificates are signed by a private CA don't forget to add the `--set privateCA=true` option.
+
+#### Upgrade
+
+Once you have selected the `helm --set` options for your SSL configuration, upgrade Rancher replacing the deprecated chart options with the new configuration.
+
+Example with privateCA option:
+
+```plain
+helm upgrade rancher rancher-stable/rancher \
+  --set hostname=rancher.my.org \
+  --set ingress.tls.source=secret \
+  --set privateCA=true
+```
+
+#### Populate Certificate Secrets
+
+The Ingress controller will wait until you have populated the certificate secrets before serving the Rancher application. See [Adding TLS Secrets](#adding-tls-secrets) for details.
 
 ## Connecting to Rancher
 
