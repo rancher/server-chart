@@ -62,7 +62,7 @@ replicas: 3
 # Set pod resource requests/limits for Rancher.
 resources: {}
 
-# DEPRECATED: This parameter will be removed in future versions of this helm chart. See README for details.
+# DEPRECATED: This parameter will be removed in future versions of this helm chart. See https://rancher.com/docs/rancher/v2.x/en/installation/ha/helm-rancher/chart-options/#external-tls-termination for details.
 # 
 # tls
 #   Where to offload the TLS/SSL encrytion
