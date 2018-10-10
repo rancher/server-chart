@@ -1,5 +1,4 @@
-{{- if eq .Values.tls "ingress" -}}
-  {{- if eq .Values.ingress.tls.source "letsEncrypt" }}
+{{- if eq .Values.ingress.tls.source "letsEncrypt" -}}
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
 metadata:
@@ -21,5 +20,4 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-{{ .Values.letsEncrypt.environment }}
     http01: {}
-  {{- end }}
 {{- end -}}
