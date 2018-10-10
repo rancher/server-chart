@@ -116,13 +116,13 @@ spec:
 {{- if .Values.additionalTrustedCAs }}
       - name: tls-ca-additional-volume
         secret:
-          defaultMode: 0440
+          defaultMode: 0400
           secretName: tls-ca-additional
 {{- end }}
 {{- if .Values.privateCA }}
       - name: tls-ca-volume
         secret:
-          defaultMode: 0750
+          defaultMode: 0400
           secretName: tls-ca
 {{- end }}
 {{- if gt .Values.auditLog.level 0.0 }}
