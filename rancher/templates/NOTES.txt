@@ -7,11 +7,3 @@ Check out our docs at https://rancher.com/docs/rancher/v2.x/en/
 Browse to https://{{ .Values.hostname }}
 
 Happy Containering!
-
-{{ if eq .Values.tls "external" -}}
--------------------------------------------------------
-
-WARNING: Due to security concerns and configuration variability, terminating TLS exclusively on an external load balancer is being deprecated. The "tls=external" option will be removed in future versions of the Helm chart.
-
-See https://rancher.com/docs/rancher/v2.x/en/installation/ha/helm-rancher/chart-options/#external-tls-termination for details of this change and converting to TLS on the Ingress.
-{{- end }}
