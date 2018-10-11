@@ -1,7 +1,7 @@
 apiVersion: v1
 name: rancher
 description: Install Rancher Server to manage Kubernetes clusters across providers.
-version: 2.1.0
+version: 2018.10.1
 appVersion: v2.1.0
 home: https://rancher.com
 icon: https://github.com/rancher/ui/blob/master/public/assets/images/logos/welcome-cow.svg
