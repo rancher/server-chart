@@ -22,7 +22,7 @@ spec:
 {{- end }}
       affinity:
         podAntiAffinity:
-{{- if eq .Values.anitAffinity "required" }}
+{{- if eq .Values.antiAffinity "required" }}
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
