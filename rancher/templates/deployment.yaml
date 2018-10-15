@@ -1,5 +1,5 @@
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: {{ template "rancher.fullname" . }}
   labels:
@@ -22,6 +22,7 @@ spec:
 {{- end }}
       affinity:
         podAntiAffinity:
+{{- if eq .Values.antiAffinity "required" }}
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
@@ -30,6 +31,18 @@ spec:
                 values:
                 - {{ template "rancher.fullname" . }}
             topologyKey: kubernetes.io/hostname
+{{- else }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ template "rancher.fullname" . }}
+              topologyKey: kubernetes.io/hostname
+{{- end }}
       containers:
       - image: {{ .Values.rancherImage }}:{{ default .Chart.AppVersion .Values.rancherImageTag }}
         name: {{ template "rancher.name" . }}
