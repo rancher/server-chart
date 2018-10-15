@@ -2,6 +2,9 @@
 # Enable this flag and add your CA certs as a secret named tls-ca-additional in the namespace.
 # See README.md for details.
 additionalTrustedCAs: false
+
+antiAffinity: preferred
+
 # Audit Logs https://rancher.com/docs/rancher/v2.x/en/installation/api-auditing/
 # The audit log is piped to the console of the rancher-audit-log container in the rancher pod.
 # https://rancher.com/docs/rancher/v2.x/en/installation/api-auditing/

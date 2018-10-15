@@ -22,6 +22,16 @@ spec:
 {{- end }}
       affinity:
         podAntiAffinity:
+{{- if eq .Values.anitAffinity "required" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - {{ template "rancher.fullname" . }}
+            topologyKey: kubernetes.io/hostname
+{{- else }}
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 100
             podAffinityTerm:
@@ -32,6 +42,7 @@ spec:
                   values:
                   - {{ template "rancher.fullname" . }}
               topologyKey: kubernetes.io/hostname
+{{- end }}
       containers:
       - image: {{ .Values.rancherImage }}:{{ default .Chart.AppVersion .Values.rancherImageTag }}
         name: {{ template "rancher.name" . }}
