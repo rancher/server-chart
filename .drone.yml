@@ -1,9 +1,10 @@
 ---
 pipeline:
   build:
-    image: alpine
+    image: debian
     commands:
-      - apk --no-cache add curl bash ca-certificates openssl
+      - apt-get update
+      - apt-get install -y curl ca-certificates git
       # Install latest helm and unittest plugin
       - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
       - helm init -c
