@@ -1,17 +1,19 @@
 ---
 pipeline:
   build:
-    image: alpine
+    image: debian
     commands:
-      - apk --no-cache add curl bash ca-certificates openssl
-      # Install latest helm
+      - apt-get update
+      - apt-get install -y curl ca-certificates git
+      # Install latest helm and unittest plugin
       - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-      # Pull latest index to merge with new index
-      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/latest/index.yaml
-      # Helm - Lint, Package, Index
       - helm init -c
-      - helm lint ./rancher
+      - helm plugin install https://github.com/lrills/helm-unittest
+      # Helm - lint, test and package
+      - ./scripts/test
       - helm package -d ./charts/latest ./rancher
+      # Pull and update Index 
+      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/latest/index.yaml
       - helm repo index --merge /tmp/index.yaml ./charts/latest
 
   publish:
