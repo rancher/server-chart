@@ -14,7 +14,9 @@ metadata:
 {{- if eq .Values.tls "external" }}
     nginx.ingress.kubernetes.io/ssl-redirect: "false" # turn off ssl redirect for external.
 {{- else }}
-  {{- if ne .Values.ingress.tls.source "secret" }}
+  {{- if .Values.ingress.tls.issuerName }}
+    certmanager.k8s.io/issuer: {{ .Values.ingress.tls.issuerName }}
+  {{- else if ne .Values.ingress.tls.source "secret" }}
     certmanager.k8s.io/issuer: {{ template "rancher.fullname" . }}
   {{- end }}
 {{- end }}
