@@ -11,15 +11,15 @@ pipeline:
       - helm plugin install https://github.com/lrills/helm-unittest
       # Helm - lint, test and package
       - ./scripts/test
-      - helm package -d ./charts/stable ./rancher
+      - helm package -d ./charts/latest ./rancher
       # Pull and update Index 
-      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/stable/index.yaml
-      - helm repo index --merge /tmp/index.yaml ./charts/stable
+      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/latest/index.yaml
+      - helm repo index --merge /tmp/index.yaml ./charts/latest
 
   publish:
     image: plugins/gcs
-    source: charts/stable
-    target: releases.rancher.com/server-charts/stable
+    source: charts/latest
+    target: releases.rancher.com/server-charts/latest
     acl:
       - allUsers:READER
     cache_control: public,max-age=3600
