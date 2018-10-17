@@ -7,17 +7,17 @@ pipeline:
       # Install latest helm
       - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
       # Pull latest index to merge with new index
-      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/stable/index.yaml
+      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/latest/index.yaml
       # Helm - Lint, Package, Index
       - helm init -c
       - helm lint ./rancher
-      - helm package -d ./charts/stable ./rancher
-      - helm repo index --merge /tmp/index.yaml ./charts/stable
+      - helm package -d ./charts/latest ./rancher
+      - helm repo index --merge /tmp/index.yaml ./charts/latest
 
   publish:
     image: plugins/gcs
-    source: charts/stable
-    target: releases.rancher.com/server-charts/stable
+    source: charts/latest
+    target: releases.rancher.com/server-charts/latest
     acl:
       - allUsers:READER
     cache_control: public,max-age=3600
