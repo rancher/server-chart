@@ -33,9 +33,10 @@ imagePullSecrets: []
 # Readme for details and instruction on adding tls secrets.
 ingress:
   tls:
-    # rancher, letsEncrypt, secrets
+    # rancher, letsEncrypt, secret, issuer, clusterIssuer
     source: rancher
-    # Set the issuerName of the ClusterIssuer or Issuer resource in the rancher namespace (CertManager)
+    # Set the issuerName of the ClusterIssuer or Issuer resource (CertManager). 
+    #   Source must be ingress.tls.source must be issuer or clusterIssuer
     # issuerName:
 
 ### LetsEncrypt config ###
