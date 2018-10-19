@@ -9,6 +9,9 @@ metadata:
     release: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "rancher.fullname" . }}
   template:
     metadata:
       labels:
