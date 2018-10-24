@@ -18,6 +18,9 @@ metadata:
     certmanager.k8s.io/issuer: {{ template "rancher.fullname" . }}
   {{- end }}
 {{- end }}
+{{- if .Values.ingress.extraAnnotations }}
+{{ toYaml .Values.ingress.extraAnnotations | indent 4 }}
+{{- end }}
 spec:
   rules:
   - host: {{ .Values.hostname }}  # hostname to access rancher server

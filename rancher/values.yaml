@@ -32,6 +32,7 @@ imagePullSecrets: []
 ### ingress ###
 # Readme for details and instruction on adding tls secrets.
 ingress:
+  extraAnnotations: {}
   tls:
     # rancher, letsEncrypt, secrets
     source: rancher
