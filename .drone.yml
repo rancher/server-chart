@@ -4,6 +4,8 @@ pipeline:
     image: rancher/dapper:1.11.2
     commands:
       - dapper ci
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     when:
       ref:
         exclude: [ regs/tags/*stable* ]
@@ -12,6 +14,8 @@ pipeline:
     image: rancher/dapper:1.11.2
     commands:
       - dapper promote
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     when:
       branch: master
       event: tag
