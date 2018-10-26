@@ -1,2 +1,4 @@
 /charts/*
 .vscode
+.dapper
+*/*.swp

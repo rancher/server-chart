@@ -1,22 +1,28 @@
 ---
 pipeline:
   build:
-    image: debian
+    image: rancher/dapper:1.11.2
     commands:
-      - apt-get update
-      - apt-get install -y curl ca-certificates git
-      # Install latest helm and unittest plugin
-      - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-      - helm init -c
-      - helm plugin install https://github.com/lrills/helm-unittest
-      # Helm - lint, test and package
-      - ./scripts/test
-      - helm package -d ./charts/latest ./rancher
-      # Pull and update Index 
-      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/latest/index.yaml
-      - helm repo index --merge /tmp/index.yaml ./charts/latest
+      - dapper ci
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      ref:
+        exclude: [ regs/tags/*stable* ]
 
-  publish:
+  promote_stable:
+    image: rancher/dapper:1.11.2
+    commands:
+      - dapper promote
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      branch: master
+      event: tag
+      ref:
+        include: [ regs/tags/*stable* ]
+
+  publish-latest:
     image: plugins/gcs
     source: charts/latest
     target: releases.rancher.com/server-charts/latest
@@ -29,3 +35,21 @@ pipeline:
     when:
       branch: master
       event: tag
+      ref:
+        exclude: [ regs/tags/*stable* ]
+
+  publish-stable:
+    image: plugins/gcs
+    source: charts/stable
+    target: releases.rancher.com/server-charts/stable
+    acl:
+      - allUsers:READER
+    cache_control: public,max-age=3600
+    secrets:
+      - source: google_auth_key
+        target: GOOGLE_CREDENTIALS
+    when:
+      branch: master
+      event: tag
+      ref:
+        include: [ regs/tags/*stable* ]
