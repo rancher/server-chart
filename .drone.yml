@@ -22,6 +22,22 @@ pipeline:
       ref:
         include: [ regs/tags/*stable* ]
 
+  publish-alpha:
+    image: plugins/gcs
+    source: charts/alpha
+    target: releases.rancher.com/server-charts/alpha
+    acl:
+      - allUsers:READER
+    cache_control: public,max-age=3600
+    secrets:
+      - source: google_auth_key
+        target: GOOGLE_CREDENTIALS
+    when:
+      branch: master
+      event: tag
+      ref:
+        include: [ regs/tags/*alpha* ]
+
   publish-latest:
     image: plugins/gcs
     source: charts/latest
