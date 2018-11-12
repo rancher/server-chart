@@ -55,8 +55,14 @@ privateCA: false
 # http[s] proxy server passed into rancher server.
 # proxy: http://<username>@<password>:<url>:<port>
 
-# comma separated list of domains or ip addresses that will not use the proxy 
-noProxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16 
+# comma separated list of domains or ip addresses that will not use the proxy
+noProxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+
+# Values in seconds for configuring the nginx ingress
+# Useful for more aggressively marking nodes dead on bare metal installs
+proxyConnectTimeout: 30
+proxyReadTimeout: 1800
+proxySendTimeout: 1800
 
 # Override rancher image location for Air Gap installs
 rancherImage: rancher/rancher
@@ -70,7 +76,7 @@ replicas: 3
 # Set pod resource requests/limits for Rancher.
 resources: {}
 
-# 
+#
 # tls
 #   Where to offload the TLS/SSL encryption
 # - ingress (default)
