@@ -5,6 +5,7 @@ set -e
 . ./version
 
 cd $(dirname $0)/..
+mkdir -p ./charts/${CHART_REPO}
 
 helm package -d ./charts/${CHART_REPO} ./rancher
 
