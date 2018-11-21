@@ -76,3 +76,5 @@ resources: {}
 # - ingress (default)
 # - external
 tls: ingress
+
+# nodeport: 30001
