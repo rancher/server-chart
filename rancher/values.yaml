@@ -70,9 +70,16 @@ replicas: 3
 # Set pod resource requests/limits for Rancher.
 resources: {}
 
+<<<<<<< Updated upstream
 # 
 # tls
 #   Where to offload the TLS/SSL encryption
 # - ingress (default)
 # - external
 tls: ingress
+=======
+albIngressController:
+  region: "us-east-1"
+  clusterName: "cluster"
+  imageUrl: quay.io/coreos/alb-ingress-controller:1.0.0
+>>>>>>> Stashed changes
