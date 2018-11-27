@@ -7,11 +7,13 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+{{- if .Values.service.annotations }}
+  annotations:
+{{ toYaml .Values.service.annotations | indent 4 }}
+{{- end }}
 spec:
+  type: {{ default "ClusterIP" .Values.service.type }}
   ports:
-  - port: 80
-    targetPort: 80
-    protocol: TCP
-    name: http
+{{ toYaml .Values.service.ports | indent 4 }}
   selector:
     app: {{ template "rancher.fullname" . }}

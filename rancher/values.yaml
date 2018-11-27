@@ -33,6 +33,22 @@ debug: false
 imagePullSecrets: []
 # - name: secretName
 
+### service ###
+deployment:
+  ports:
+  - containerPort: 80
+    protocol: TCP
+
+### service ###
+service:
+  annotations: {}
+  # NodePort, LoadBalancer or ClusterIP
+  #type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+
 ### ingress ###
 # Readme for details and instruction on adding tls secrets.
 ingress:

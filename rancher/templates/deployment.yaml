@@ -50,8 +50,7 @@ spec:
       - image: {{ .Values.rancherImage }}:{{ default .Chart.AppVersion .Values.rancherImageTag }}
         name: {{ template "rancher.name" . }}
         ports:
-        - containerPort: 80
-          protocol: TCP
+{{ toYaml .Values.deployment.ports | indent 8 -}}
         args:
 {{- if .Values.debug }}
         - "--debug"
