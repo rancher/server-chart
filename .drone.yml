@@ -17,7 +17,7 @@ pipeline:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     when:
-      branch: master
+      branch: release/*
       event: tag
       ref:
         include: [ regs/tags/*stable* ]
@@ -33,7 +33,7 @@ pipeline:
       - source: google_auth_key
         target: GOOGLE_CREDENTIALS
     when:
-      branch: master
+      branch: [master, release/*]
       event: tag
       ref:
         include: [ regs/tags/*alpha* ]
@@ -49,10 +49,10 @@ pipeline:
       - source: google_auth_key
         target: GOOGLE_CREDENTIALS
     when:
-      branch: master
+      branch: release/*
       event: tag
       ref:
-        exclude: [ regs/tags/*stable* ]
+        exclude: [ regs/tags/*stable*, regs/tags/*alpha* ]
 
   publish-stable:
     image: plugins/gcs
@@ -65,7 +65,7 @@ pipeline:
       - source: google_auth_key
         target: GOOGLE_CREDENTIALS
     when:
-      branch: master
+      branch: release/*
       event: tag
       ref:
         include: [ regs/tags/*stable* ]
