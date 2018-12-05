@@ -1,20 +1,60 @@
 ---
 pipeline:
   build:
-    image: alpine
+    image: rancher/dapper:1.11.2
     commands:
-      - apk --no-cache add curl bash ca-certificates openssl
-      # Install latest helm
-      - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-      # Pull latest index to merge with new index
-      - curl -o /tmp/index.yaml https://releases.rancher.com/server-charts/stable/index.yaml
-      # Helm - Lint, Package, Index
-      - helm init -c
-      - helm lint ./rancher
-      - helm package -d ./charts/stable ./rancher
-      - helm repo index --merge /tmp/index.yaml ./charts/stable
+      - dapper ci
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      ref:
+        exclude: [ regs/tags/*stable* ]
 
-  publish:
+  promote_stable:
+    image: rancher/dapper:1.11.2
+    commands:
+      - dapper promote
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      branch: release/*
+      event: tag
+      ref:
+        include: [ regs/tags/*stable* ]
+
+  publish-alpha:
+    image: plugins/gcs
+    source: charts/alpha
+    target: releases.rancher.com/server-charts/alpha
+    acl:
+      - allUsers:READER
+    cache_control: public,max-age=3600
+    secrets:
+      - source: google_auth_key
+        target: GOOGLE_CREDENTIALS
+    when:
+      branch: [master, release/*]
+      event: tag
+      ref:
+        include: [ regs/tags/*alpha* ]
+
+  publish-latest:
+    image: plugins/gcs
+    source: charts/latest
+    target: releases.rancher.com/server-charts/latest
+    acl:
+      - allUsers:READER
+    cache_control: public,max-age=3600
+    secrets:
+      - source: google_auth_key
+        target: GOOGLE_CREDENTIALS
+    when:
+      branch: release/*
+      event: tag
+      ref:
+        exclude: [ regs/tags/*stable*, regs/tags/*alpha* ]
+
+  publish-stable:
     image: plugins/gcs
     source: charts/stable
     target: releases.rancher.com/server-charts/stable
@@ -25,5 +65,7 @@ pipeline:
       - source: google_auth_key
         target: GOOGLE_CREDENTIALS
     when:
-      branch: master
+      branch: release/*
       event: tag
+      ref:
+        include: [ regs/tags/*stable* ]
