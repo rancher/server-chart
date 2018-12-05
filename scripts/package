@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+. ./version
+
+cd $(dirname $0)/..
+mkdir -p ./charts/${CHART_REPO}
+
+helm package -d ./charts/${CHART_REPO} ./rancher
+
+echo "updating index ... "
+./scripts/get_and_merge_index ${CHART_REPO}

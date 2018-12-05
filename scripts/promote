@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+. ./scripts/version
+cd $(dirname $0)/..
+
+if [ "${CHART_REPO}" = "latest" ]; then
+    echo "error: can not promote from 'latest' to 'latest'"
+    exit 1
+fi
+
+curl -sf -o charts/${CHART_REPO}/rancher-${CHART_VERSION}.tgz https://releases.rancher.com/server-charts/latest/rancher-${CHART_VERSION}.tgz
+
+./scripts/get_and_merge_index ${CHART_REPO}
