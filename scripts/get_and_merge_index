@@ -2,5 +2,5 @@
 
 repo_index=${1}
 
-curl -sf -o /tmp/index.yaml https://releases.rancher.com/server-charts/${repo_index}/index.yaml
+curl -sf -H 'Cache-Control: no-cache' -o /tmp/index.yaml https://releases.rancher.com/server-charts/${repo_index}/index.yaml
 helm repo index --merge /tmp/index.yaml ./charts/${repo_index}
