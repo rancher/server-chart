@@ -2,3 +2,4 @@
 .vscode
 .dapper
 */*.swp
+kube_config_cluster.yml
