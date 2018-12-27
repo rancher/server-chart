@@ -27,5 +27,5 @@ Run `helm search rancher` to view which Rancher version will be launched for the
 
 ```
 NAME                      CHART VERSION    APP VERSION    DESCRIPTION                                                 
-rancher-stable/rancher    2018.10.1            v2.1.0      Install Rancher Server to manage Kubernetes clusters acro...
+rancher-stable/rancher    2018.12.4            v2.1.4      Install Rancher Server to manage Kubernetes clusters acro...
 ```
