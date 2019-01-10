@@ -17,7 +17,6 @@ pipeline:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     when:
-      branch: release/*
       event: tag
       ref:
         include: [ refs/tags/*stable* ]
@@ -28,12 +27,11 @@ pipeline:
     target: releases.rancher.com/server-charts/alpha
     acl:
       - allUsers:READER
-    cache_control: public,max-age=3600
+    cache_control: public,no-cache,proxy-revalidate
     secrets:
       - source: google_auth_key
         target: GOOGLE_CREDENTIALS
     when:
-      branch: [master, release/*]
       event: tag
       ref:
         include: [ refs/tags/*alpha* ]
@@ -44,12 +42,11 @@ pipeline:
     target: releases.rancher.com/server-charts/latest
     acl:
       - allUsers:READER
-    cache_control: public,max-age=3600
+    cache_control: public,no-cache,proxy-revalidate
     secrets:
       - source: google_auth_key
         target: GOOGLE_CREDENTIALS
     when:
-      branch: release/*
       event: tag
       ref:
         exclude: [ refs/tags/*stable*, refs/tags/*alpha* ]
@@ -60,12 +57,11 @@ pipeline:
     target: releases.rancher.com/server-charts/stable
     acl:
       - allUsers:READER
-    cache_control: public,max-age=3600
+    cache_control: public,no-cache,proxy-revalidate
     secrets:
       - source: google_auth_key
         target: GOOGLE_CREDENTIALS
     when:
-      branch: release/*
       event: tag
       ref:
         include: [ refs/tags/*stable* ]

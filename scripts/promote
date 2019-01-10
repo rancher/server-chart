@@ -10,6 +10,6 @@ if [ "${CHART_REPO}" = "latest" ]; then
     exit 1
 fi
 
-curl -sf -o charts/${CHART_REPO}/rancher-${CHART_VERSION}.tgz https://releases.rancher.com/server-charts/latest/rancher-${CHART_VERSION}.tgz
+curl -f -H 'Cache-Control: max-age=0,no-cache' -H 'Host: releases.rancher.com' "https://c.storage.googleapis.com/server-charts/latest/rancher-${CHART_VERSION}.tgz?$(date +%s%N)" -o ./charts/stable/rancher-${CHART_VERSION}.tgz
 
 ./scripts/get_and_merge_index ${CHART_REPO}
