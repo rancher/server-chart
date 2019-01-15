@@ -79,3 +79,20 @@ resources: {}
 # - ingress (default)
 # - external
 tls: ingress
+
+#
+# service.type
+#   Kubernetes ServiceTypes allow you to specify what kind of service you want. The default is ClusterIP
+# - ClusterIp
+# - LoadBalancer (cloud provider)
+# - NodePort
+service:
+  type: ClusterIp
+
+  # type: NodePort
+  # nodePorts:
+  #   http: 30080
+  #   https: 30443
+  nodePorts:
+    http: ""
+    https: ""

@@ -13,5 +13,9 @@ spec:
     targetPort: 80
     protocol: TCP
     name: http
+    {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.http))) }}
+    nodePort: {{ .Values.service.nodePorts.http }}
+    {{- end }}
   selector:
     app: {{ template "rancher.fullname" . }}
+  type: "{{ .Values.service.type }}"
