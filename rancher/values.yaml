@@ -58,8 +58,8 @@ privateCA: false
 # http[s] proxy server passed into rancher server.
 # proxy: http://<username>@<password>:<url>:<port>
 
-# comma separated list of domains or ip addresses that will not use the proxy 
-noProxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16 
+# comma separated list of domains or ip addresses that will not use the proxy
+noProxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 
 # Override rancher image location for Air Gap installs
 rancherImage: rancher/rancher
@@ -73,9 +73,14 @@ replicas: 3
 # Set pod resource requests/limits for Rancher.
 resources: {}
 
-# 
+#
 # tls
 #   Where to offload the TLS/SSL encryption
 # - ingress (default)
 # - external
 tls: ingress
+
+#
+# add Environment CATTLE_SYSTEM_DEFAULT_REGISTRY as default system registry
+# without http/s
+# default_registry: your-registry:5000

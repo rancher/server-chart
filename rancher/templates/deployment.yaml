@@ -90,6 +90,10 @@ spec:
         - name: NO_PROXY
           value: {{ .Values.noProxy }}
 {{- end }}
+{{- if .Values.default_registry }}
+        - name: CATTLE_SYSTEM_DEFAULT_REGISTRY
+          value: {{ .Values.default_registry }}
+{{- end }}
         livenessProbe:
           tcpSocket:
             port: 80
