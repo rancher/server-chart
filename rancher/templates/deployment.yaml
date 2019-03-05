@@ -47,7 +47,11 @@ spec:
               topologyKey: kubernetes.io/hostname
 {{- end }}
       containers:
+{{- if .Values.defaultRegistry }}
+      - image: {{ .Values.defaultRegistry }}/{{ .Values.rancherImage }}:{{ default .Chart.AppVersion .Values.rancherImageTag }}
+{{- else }}
       - image: {{ .Values.rancherImage }}:{{ default .Chart.AppVersion .Values.rancherImageTag }}
+{{- end }}
         name: {{ template "rancher.name" . }}
         ports:
         - containerPort: 80
@@ -90,9 +94,9 @@ spec:
         - name: NO_PROXY
           value: {{ .Values.noProxy }}
 {{- end }}
-{{- if .Values.default_registry }}
+{{- if .Values.defaultRegistry }}
         - name: CATTLE_SYSTEM_DEFAULT_REGISTRY
-          value: {{ .Values.default_registry }}
+          value: {{ .Values.defaultRegistry }}
 {{- end }}
         livenessProbe:
           tcpSocket:

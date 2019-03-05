@@ -82,5 +82,5 @@ tls: ingress
 
 #
 # add Environment CATTLE_SYSTEM_DEFAULT_REGISTRY as default system registry
-# without http/s
-# default_registry: your-registry:5000
+# and set is for the rancher image
+# defaultRegistry: registry.yourdomain.com:port
