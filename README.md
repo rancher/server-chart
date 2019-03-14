@@ -1,4 +1,10 @@
-# rancher
+# [Deprecated] 
+
+This repo is now a part of the [rancher/rancher](https://github.com/rancher/rancher) repo.
+
+Please open issues / PRs against the main Rancher repo, we will be archiving this in the future.
+
+## rancher
 
 Chart for installing Rancher Server to manage Kubernetes clusters across providers.
 
